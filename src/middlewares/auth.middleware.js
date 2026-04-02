@@ -7,8 +7,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyJWT = asyncHandler(async(req,res,next)=>{
 
-   const token =  req.cookies?.accessToken || req.header("Authorization")?.
-    replace("Bearer", "")
+    const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "").trim();
 
     if(!token){
         throw new ApiError(401, "Unauthorized request");
@@ -41,7 +40,7 @@ export const verifyJWT = asyncHandler(async(req,res,next)=>{
 })
 
 export const validateRole = (roles = []) =>{
-    asyncHandler(async (req,res, next)=>{
+    return asyncHandler(async (req,res, next)=>{
         const {projectId} = req.params;
 
         if(!projectId){
@@ -57,13 +56,7 @@ export const validateRole = (roles = []) =>{
             throw new ApiError(403, "User does not have required role");
         }
 
-        const givenRole = project?.role
-
-        req.user.role = givenRole;
-
-        if(!roles.includes(givenRole)){
-            throw new ApiError(403, "User does not have required role");
-        }
+        req.user.role = project.role;
 
         next();
     })

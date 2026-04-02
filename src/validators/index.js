@@ -24,7 +24,7 @@ const userRegisterValidator = () =>{
              .notEmpty()
              .withMessage("Password is required"),
 
-          body("fullname")
+        body("fullName")
           .optional()
           .trim(),
      ]
